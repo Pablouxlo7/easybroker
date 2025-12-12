@@ -1,0 +1,26 @@
+{
+    "name": "easybroker/php-client",
+    "description": "Cliente PHP profesional para la API de EasyBroker",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "EasyBroker\\": "src/",
+            "EasyBroker\\Models\\": "src/Models/",
+            "EasyBroker\\Services\\": "src/Services/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "EasyBroker\\Tests\\": "tests/"
+        }
+    }
+}
