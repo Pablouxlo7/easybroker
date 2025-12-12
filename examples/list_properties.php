@@ -6,57 +6,58 @@ require_once __DIR__ . '/../src/HttpClient.php';
 require_once __DIR__ . '/../src/Models/Property.php';
 require_once __DIR__ . '/../src/Services/PropertyService.php';
 
-use EasyBroker\Api\HttpClient;
-use EasyBroker\Api\Services\PropertyService;
 use EasyBroker\Api\ApiException;
+use EasyBroker\Api\HttpClient;
+use EasyBroker\Services\PropertyService;
 
 /**
- * Script principal para leer y mostrar todas las propiedades
- * del ambiente de pruebas de EasyBroker.
+ * Main script to read and display all properties
+ * of the EasyBroker test environment.
+ * .
  */
 
-// Configuración del ambiente de pruebas
+// Test environment setup
 const STAGING_BASE_URL = 'https://api.stagingeb.com';
 const STAGING_API_KEY = 'l7u502p8v46ba3ppgvj5y2aad50lb9';
 
-function displayProperty(EasyBroker\Api\Models\Property $property, int $index): void
+function displayProperty(EasyBroker\Models\Property $property, int $index): void
 {
     echo sprintf("\n%d. %s\n", $index, str_repeat('-', 80));
     echo sprintf("   ID:       %s\n", $property->getPublicId());
-    echo sprintf("   Título:   %s\n", $property->getTitle());
+    echo sprintf("   Title:   %s\n", $property->getTitle());
     
     if ($property->getPropertyType()) {
-        echo sprintf("   Tipo:     %s\n", $property->getPropertyType());
+        echo sprintf("   Type:     %s\n", $property->getPropertyType());
     }
     
     if ($property->getBedrooms() !== null) {
-        echo sprintf("   Recámaras: %d\n", $property->getBedrooms());
+        echo sprintf("   Rooms: %d\n", $property->getBedrooms());
     }
     
     if ($property->getBathrooms() !== null) {
-        echo sprintf("   Baños:    %d\n", $property->getBathrooms());
+        echo sprintf("   Bathrooms:    %d\n", $property->getBathrooms());
     }
     
     if ($property->getLocation()) {
-        echo sprintf("   Ubicación: %s\n", $property->getLocation());
+        echo sprintf("   Location: %s\n", $property->getLocation());
     }
 }
 
 function main(): void
 {
     try {
-        echo "=== Cliente de API EasyBroker ===\n";
-        echo "Ambiente: Pruebas (Staging)\n\n";
+        echo "=== API CLIENT EasyBroker ===\n";
+        echo "Environment: Testing (Staging)\n\n";
 
         $httpClient = new HttpClient(STAGING_BASE_URL, STAGING_API_KEY);
         $propertyService = new PropertyService($httpClient);
 
-        echo "Obteniendo información de propiedades...\n";
+        echo "Obtaining property information...\n";
         $totalProperties = $propertyService->countProperties();
-        echo sprintf("Total de propiedades disponibles: %d\n", $totalProperties);
+        echo sprintf("Total available properties: %d\n", $totalProperties);
 
         echo "\n" . str_repeat('=', 80) . "\n";
-        echo "LISTADO DE PROPIEDADES\n";
+        echo "PROPERTY LIST\n";
         echo str_repeat('=', 80) . "\n";
 
         $counter = 0;
@@ -66,14 +67,14 @@ function main(): void
         }
 
         echo "\n" . str_repeat('=', 80) . "\n";
-        echo sprintf("Se procesaron %d propiedades exitosamente.\n", $counter);
+        echo sprintf("%d properties were processed successfully.\n", $counter);
 
     } catch (ApiException $e) {
-        echo "\n❌ Error de API: " . $e->getMessage() . "\n";
-        echo "Código: " . $e->getCode() . "\n";
+        echo "\n❌ API ERROR: " . $e->getMessage() . "\n";
+        echo "Code: " . $e->getCode() . "\n";
         exit(1);
     } catch (Exception $e) {
-        echo "\n❌ Error inesperado: " . $e->getMessage() . "\n";
+        echo "\n❌ Unexpected error: " . $e->getMessage() . "\n";
         exit(1);
     }
 }

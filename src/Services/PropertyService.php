@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace EasyBroker\Api\Services;
+namespace EasyBroker\Services;
 
+use EasyBroker\Api\ApiException;
 use EasyBroker\Api\HttpClient;
-use EasyBroker\Api\Models\Property;
+use EasyBroker\Models\Property;
 use Generator;
 
 /**
- * Servicio para interactuar con propiedades de EasyBroker.
- * 
- * Proporciona métodos de alto nivel para consultar propiedades
- * con paginación automática y manejo de errores.
+ * Service to interact with EasyBroker properties
+ *
+ * It provides high-level methods for querying properties
+ *  with automatic pagination and error handling.
  */
 class PropertyService
 {
@@ -27,10 +28,11 @@ class PropertyService
     }
 
     /**
-     * Obtiene todas las propiedades usando paginación automática.
-     * 
-     * @param int $limit Número máximo de propiedades a obtener (0 = todas)
+     * It retrieves all properties using automatic pagination
+     *
+     * @param int $limit Maximum number of properties to obtain (0 = all)
      * @return Generator<Property>
+     * @throws ApiException
      */
     public function getAllProperties(int $limit = 0): Generator
     {
@@ -62,11 +64,12 @@ class PropertyService
     }
 
     /**
-     * Obtiene una página específica de propiedades.
+     * Get a specific properties page.
      *
-     * @param int $page Número de página (1-indexed)
-     * @param int $pageSize Tamaño de página
+     * @param int $page Page number (1-indexed)
+     * @param int $pageSize Page size
      * @return array{properties: Property[], pagination: array}
+     * @throws ApiException
      */
     public function getPropertiesPage(int $page = 1, int $pageSize = self::DEFAULT_PAGE_SIZE): array
     {
@@ -87,10 +90,11 @@ class PropertyService
     }
 
     /**
-     * Obtiene los detalles de una propiedad específica.
+     * Get the details of a specific property
      *
-     * @param string $propertyId ID público de la propiedad
+     * @param string $propertyId Public property ID
      * @return Property
+     * @throws ApiException
      */
     public function getProperty(string $propertyId): Property
     {
@@ -99,9 +103,10 @@ class PropertyService
     }
 
     /**
-     * Cuenta el total de propiedades disponibles.
+     * Count the total number of available properties.
      *
      * @return int
+     * @throws ApiException
      */
     public function countProperties(): int
     {

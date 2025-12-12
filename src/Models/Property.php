@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace EasyBroker\Api\Models;
+namespace EasyBroker\Models;
 
 /**
- * Modelo que representa una propiedad de EasyBroker.
- * 
- * Encapsula los datos de una propiedad y proporciona
- * una interfaz limpia para acceder a ellos.
+ * Model representing an EasyBroker property.
+ *
+ * It encapsulates a property's data and provides
+ *  a clean interface for accessing it.
  */
 class Property
 {
@@ -20,9 +20,6 @@ class Property
     private ?string $location;
     private array $rawData;
 
-    /**
-     * Constructor privado. Usar el método estático fromArray.
-     */
     private function __construct(array $data)
     {
         $this->rawData = $data;
@@ -35,9 +32,7 @@ class Property
     }
 
     /**
-     * Crea una instancia de Property desde un array.
-     *
-     * @param array $data Datos de la propiedad desde la API
+     * @param array $data Property data from the API
      * @return self
      */
     public static function fromArray(array $data): self
@@ -46,10 +41,10 @@ class Property
     }
 
     /**
-     * Extrae la ubicación de los datos de la propiedad.
+     * Extract the location from the property data.
      *
-     * @param array $data Datos de la propiedad
-     * @return string|null Ubicación formateada
+     * @param array $data Property details
+     * @return string|null Formatted location
      */
     private function extractLocation(array $data): ?string
     {

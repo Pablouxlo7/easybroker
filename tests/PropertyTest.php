@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace EasyBroker\Tests;
 
 use PHPUnit\Framework\TestCase;
-use EasyBroker\Api\Models\Property;
+use EasyBroker\Models\Property;
 
 class PropertyTest extends TestCase
 {

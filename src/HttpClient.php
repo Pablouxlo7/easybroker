@@ -6,12 +6,6 @@ namespace EasyBroker\Api;
 
 use Exception;
 
-/**
- * Cliente HTTP para interactuar con la API de EasyBroker.
- * 
- * Proporciona métodos para realizar peticiones HTTP con autenticación
- * y manejo de errores centralizado.
- */
 class HttpClient
 {
     private const DEFAULT_TIMEOUT = 30;
@@ -23,11 +17,9 @@ class HttpClient
     private array $lastRequestTimes = [];
 
     /**
-     * Constructor del cliente HTTP.
-     *
-     * @param string $baseUrl URL base de la API
-     * @param string $apiKey Clave de API para autenticación
-     * @param int $timeout Tiempo de espera en segundos
+     * @param string $baseUrl
+     * @param string $apiKey
+     * @param int $timeout
      */
     public function __construct(string $baseUrl, string $apiKey, int $timeout = self::DEFAULT_TIMEOUT)
     {
@@ -37,12 +29,12 @@ class HttpClient
     }
 
     /**
-     * Realiza una petición GET a la API.
+     * Make a GET request to the API.
      *
-     * @param string $endpoint Endpoint a consultar
-     * @param array $queryParams Parámetros de consulta opcionales
-     * @return array Respuesta decodificada de la API
-     * @throws ApiException Si la petición falla
+     * @param string $endpoint
+     * @param array $queryParams
+     * @return array
+     * @throws ApiException
      */
     public function get(string $endpoint, array $queryParams = []): array
     {
@@ -67,18 +59,18 @@ class HttpClient
         curl_close($ch);
 
         if ($response === false) {
-            throw new ApiException("Error de conexión: {$error}");
+            throw new ApiException("Connection error: {$error}");
         }
 
         return $this->handleResponse($response, $httpCode);
     }
 
     /**
-     * Construye la URL completa con parámetros de consulta.
+     * Build the complete URL with query parameters.
      *
-     * @param string $endpoint Endpoint de la API
-     * @param array $queryParams Parámetros de consulta
-     * @return string URL completa
+     * @param string $endpoint
+     * @param array $queryParams
+     * @return string
      */
     private function buildUrl(string $endpoint, array $queryParams): string
     {
@@ -92,9 +84,7 @@ class HttpClient
     }
 
     /**
-     * Construye los encabezados HTTP necesarios.
-     *
-     * @return array Lista de encabezados
+     * @return array Headers
      */
     private function buildHeaders(): array
     {
@@ -106,12 +96,12 @@ class HttpClient
     }
 
     /**
-     * Maneja la respuesta de la API y lanza excepciones en caso de error.
+     * It handles the API response and throws exceptions in case of error.
      *
-     * @param string $response Respuesta cruda de la API
-     * @param int $httpCode Código de estado HTTP
-     * @return array Respuesta decodificada
-     * @throws ApiException Si hay un error en la respuesta
+     * @param string $response
+     * @param int $httpCode
+     * @return array
+     * @throws ApiException
      */
     private function handleResponse(string $response, int $httpCode): array
     {
@@ -130,20 +120,19 @@ class HttpClient
     }
 
     /**
-     * Respeta el límite de tasa de 20 requests por segundo.
+     * Respect the rate limit of 20 requests per second.
      */
     private function respectRateLimit(): void
     {
         $now = microtime(true);
         $oneSecondAgo = $now - 1.0;
 
-        // Eliminar requests antiguos
         $this->lastRequestTimes = array_filter(
             $this->lastRequestTimes,
             fn($time) => $time > $oneSecondAgo
         );
 
-        // Si alcanzamos el límite, esperar
+        //If we reach the limit, wait
         if (count($this->lastRequestTimes) >= self::RATE_LIMIT_PER_SECOND) {
             $oldestRequest = min($this->lastRequestTimes);
             $sleepTime = max(0, 1.0 - ($now - $oldestRequest));
@@ -157,7 +146,7 @@ class HttpClient
 }
 
 /**
- * Excepción personalizada para errores de la API.
+ * Custom exception for API errors.
  */
 class ApiException extends Exception
 {
